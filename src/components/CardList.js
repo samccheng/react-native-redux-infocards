@@ -5,7 +5,7 @@ import ListItem from './ListItem'
 
 class CardList extends React.Component {
   renderRow({item}) {
-    return <ListItem item={item} />
+    return <ListItem key={item.id} item={item} />
   }
 
   render() {

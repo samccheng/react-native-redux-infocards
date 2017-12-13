@@ -1,9 +1,9 @@
 import data from './libraryList.json'
 
-export const selectionReducer = ( state = data, action ) => {
+export const selectionReducer = ( state = null, action ) => {
   switch(action.type) {
     case "FETCH_CARD":
-      return state
+      return action.payload
     default:
       return state
   }

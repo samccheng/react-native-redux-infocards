@@ -1,13 +1,42 @@
 import React from 'react'
-import { Text, StyleSheet } from 'react-native'
+import { View,
+         Text,
+         StyleSheet,
+         TouchableWithoutFeedback,
+         LayoutAnimation } from 'react-native'
 import { CardItem } from './common'
+import { connect } from 'react-redux'
+import { selectCard } from '../actions'
 
 class ListItem extends React.Component {
+  componentWillUpdate() {
+    LayoutAnimation.spring()
+  }
+
+  renderContent() {
+    const { expandCard, item } = this.props
+
+    if(expandCard) {
+      return (
+        <CardItem>
+          <Text style={{ flex: 1, paddingLeft: 15 }}>{item.description}</Text>
+        </CardItem>
+      )
+    }
+  }
+
   render() {
+    const { id, title } = this.props.item
+
     return (
-      <CardItem>
-        <Text style={styles.titleStyle}>{this.props.item.title}</Text>
-      </CardItem>
+      <TouchableWithoutFeedback onPress={() => this.props.card(id)}>
+        <View>
+          <CardItem>
+            <Text style={styles.titleStyle}>{title}</Text>
+          </CardItem>
+          {this.renderContent()}
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 }
@@ -19,4 +48,14 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ListItem
+const mapStateToProps = (state, ownProps) => {
+  const expandCard = state.selectedCard === ownProps.item.id
+  return { expandCard }
+}
+
+
+const mapDispatchToProps = dispatch => {
+  return { card: id => dispatch(selectCard(id)) }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListItem)
